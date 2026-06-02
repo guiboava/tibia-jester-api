@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17.5
+    container_name: tibia-jester-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: tibia-jester-db
+    networks:
+      - tibia-jester-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: tibia-jester-pgadmin
+    ports:
+      - "15432:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: guiboava@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123
+    networks:
+      - tibia-jester-network
+
+networks:
+  tibia-jester-network:
+    driver: bridge
