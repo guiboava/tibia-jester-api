@@ -1,6 +1,8 @@
 package io.github.guiboava.tibiajesterapi.entity;
 
-import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.guiboava.tibiajesterapi.entity.enums.Party;
+import io.github.guiboava.tibiajesterapi.entity.enums.Vocation;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,42 +10,34 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "hunt_stats")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class HuntStats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 150)
-    private String name;
-
-    @Column(name = "login", nullable = false, unique = true, length = 50)
-    private String login;
-
-    @Column(name = "email", nullable = false, unique = true, length = 150)
-    private String email;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vocation", nullable = false)
+    private Vocation vocation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false)
-    private UserType userType;
+    @Column(name = "party", nullable = false)
+    private Party party;
 
-    @Column(name = "password", nullable = false, length = 60)
-    private String password;
+    @Column(name = "raw_xp", nullable = false)
+    private Long rawXp;
 
-    @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate;
-
-    @OneToMany
+    @Column(name = "xp_per_hour", nullable = false)
+    private Long xpPerHour;
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
@@ -52,5 +46,10 @@ public class User {
     @LastModifiedDate
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hunt_id")
+    @JsonIgnore
+    private Hunt hunt;
 
 }

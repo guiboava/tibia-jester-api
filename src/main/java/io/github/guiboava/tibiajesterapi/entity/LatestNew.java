@@ -1,6 +1,5 @@
 package io.github.guiboava.tibiajesterapi.entity;
 
-import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,37 +12,41 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "latest_new")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class LatestNew {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 150)
-    private String name;
+    @Column(name = "tibia_data_id", nullable = false, updatable = false)
+    private long tibiaDataId;
 
-    @Column(name = "login", nullable = false, unique = true, length = 50)
-    private String login;
+    @Column(name = "release_date", nullable = false)
+    private LocalDate releaseDate;
 
-    @Column(name = "email", nullable = false, unique = true, length = 150)
-    private String email;
+    @Column(name = "new_title", nullable = false)
+    private String newTitle;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false)
-    private UserType userType;
+    @Column(name = "category", nullable = false)
+    private String category;
 
-    @Column(name = "password", nullable = false, length = 60)
-    private String password;
+    @Column(name = "type", nullable = false)
+    private String type;
 
-    @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate;
+    @Column(name = "url_tibia", nullable = false)
+    private String urlTibia;
 
-    @OneToMany
+    @Column(name = "url_api", nullable = false)
+    private String urlApi;
+
+    @Lob
+    @Column(name = "content")
+    private String content;
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
