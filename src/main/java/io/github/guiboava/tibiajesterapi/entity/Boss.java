@@ -1,5 +1,6 @@
 package io.github.guiboava.tibiajesterapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +39,9 @@ public class Boss {
     public String getFileName() {
         return name + "." + imageExtension.name().toLowerCase();
     }
+
+    @OneToMany(mappedBy = "boss")
+    private Set<UserBossAlarm> userBossAlarms = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
