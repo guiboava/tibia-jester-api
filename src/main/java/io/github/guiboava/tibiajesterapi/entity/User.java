@@ -1,5 +1,6 @@
 package io.github.guiboava.tibiajesterapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -43,7 +46,9 @@ public class User {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<UserCharacter> userCharacters = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)

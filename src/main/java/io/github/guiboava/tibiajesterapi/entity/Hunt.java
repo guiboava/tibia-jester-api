@@ -47,6 +47,14 @@ public class Hunt {
         return name + "." + imageExtension.name().toLowerCase();
     }
 
+    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<HuntStats> huntStatsLists = new HashSet<>();
+
+    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<HuntLocker> huntLockers = new HashSet<>();
+
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
@@ -55,8 +63,5 @@ public class Hunt {
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
 
-    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<HuntStats> huntStatsList = new HashSet<>();
 
 }

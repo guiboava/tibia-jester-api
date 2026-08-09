@@ -7,6 +7,8 @@ import io.github.guiboava.tibiajesterapi.entity.enums.Vocation;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -83,4 +85,16 @@ public class Character {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guild_id")
     private Guild guild;
+
+    @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<UserCharacter> userCharacters = new HashSet<>();
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "updated_date", nullable = false)
+    private LocalDateTime updatedDate;
 }

@@ -1,5 +1,6 @@
 package io.github.guiboava.tibiajesterapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,8 +59,13 @@ public class World {
     @Column(name = "game_world_type")
     private String gameWorldType;
 
-    @OneToMany(mappedBy = "world")
+    @OneToMany(mappedBy = "world", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Character> characters = new HashSet<>();
+
+    @OneToMany(mappedBy = "world",fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<HuntLocker> huntLockers = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
