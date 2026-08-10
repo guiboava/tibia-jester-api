@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.entity;
+package io.github.guiboava.tibiajesterapi.entity.model;
 
 import io.github.guiboava.tibiajesterapi.entity.enums.Grade;
 import jakarta.persistence.*;

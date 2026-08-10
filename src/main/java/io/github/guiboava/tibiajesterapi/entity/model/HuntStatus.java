@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.entity;
+package io.github.guiboava.tibiajesterapi.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.guiboava.tibiajesterapi.entity.enums.Party;
@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hunt_stats")
+@Table(name = "hunt_status")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class HuntStats {
+public class HuntStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

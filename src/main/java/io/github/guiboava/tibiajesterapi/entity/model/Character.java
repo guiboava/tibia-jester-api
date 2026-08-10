@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.entity;
+package io.github.guiboava.tibiajesterapi.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.guiboava.tibiajesterapi.entity.enums.AccountStatus;

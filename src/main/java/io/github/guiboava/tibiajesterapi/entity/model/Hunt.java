@@ -1,69 +1,57 @@
-package io.github.guiboava.tibiajesterapi.entity;
+package io.github.guiboava.tibiajesterapi.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "worlds")
+@Table(name = "hunts")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class World {
+public class Hunt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Length(max = 100)
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Length(max = 20)
-    @Column(name = "status", nullable = false)
-    private String status;
+    @Column(name = "level_min", nullable = false)
+    private Integer levelMin;
 
-    @Column(name = "players_online")
-    private Integer playersOnline;
+    @Column(name = "level_max", nullable = false)
+    private Integer levelMax;
 
-    @Length(max = 50)
-    @Column(name = "pvp_type")
-    private String pvpType;
+    @Column(name = "image", nullable = false)
+    @Lob
+    private byte[] image;
 
-    @Column(name = "premium_only")
-    private Boolean premiumOnly;
+    @Column(name = "image_extension", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ImageExtension imageExtension;
 
-    @Length(max = 30)
-    @Column(name = "transfer_type")
-    private String transferType;
+    public String getFileName() {
+        return name + "." + imageExtension.name().toLowerCase();
+    }
 
-    @Column(name = "battleye_protected")
-    private Boolean battleyeProtected;
-
-    @Column(name = "battleye_date")
-    private LocalDate battleyeDate;
-
-    @Length(max = 30)
-    @Column(name = "game_world_type")
-    private String gameWorldType;
-
-    @OneToMany(mappedBy = "world", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Character> characters = new HashSet<>();
+    private Set<HuntStatus> huntStatusLists = new HashSet<>();
 
-    @OneToMany(mappedBy = "world",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<HuntLocker> huntLockers = new HashSet<>();
 
@@ -74,5 +62,6 @@ public class World {
     @LastModifiedDate
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
+
 
 }

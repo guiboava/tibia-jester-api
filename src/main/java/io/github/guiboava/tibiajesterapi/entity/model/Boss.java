@@ -1,5 +1,6 @@
-package io.github.guiboava.tibiajesterapi.entity;
+package io.github.guiboava.tibiajesterapi.entity.model;
 
+import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,46 +8,39 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "latest_new")
+@Table(name = "bosses")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class LatestNew {
+public class Boss {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "tibia_data_id", nullable = false, updatable = false)
-    private long tibiaDataId;
+    private String name;
 
-    @Column(name = "release_date", nullable = false)
-    private LocalDate releaseDate;
-
-    @Column(name = "new_title", nullable = false)
-    private String newTitle;
-
-    @Column(name = "category", nullable = false)
-    private String category;
-
-    @Column(name = "type", nullable = false)
-    private String type;
-
-    @Column(name = "url_tibia", nullable = false)
-    private String urlTibia;
-
-    @Column(name = "url_api", nullable = false)
-    private String urlApi;
-
+    @Column(name = "image", nullable = false)
     @Lob
-    @Column(name = "content")
-    private String content;
+    private byte[] image;
+
+    @Column(name = "image_extension", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ImageExtension imageExtension;
+
+    public String getFileName() {
+        return name + "." + imageExtension.name().toLowerCase();
+    }
+
+    @OneToMany(mappedBy = "boss")
+    private Set<UserBossAlarm> userBossAlarms = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
@@ -55,5 +49,6 @@ public class LatestNew {
     @LastModifiedDate
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
+
 
 }
