@@ -1,0 +1,129 @@
+package io.github.guiboava.tibiajesterapi.controller.common;
+
+import io.github.guiboava.tibiajesterapi.controller.dto.ErrorField;
+import io.github.guiboava.tibiajesterapi.controller.dto.ErrorResponse;
+import io.github.guiboava.tibiajesterapi.exception.*;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+//import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleUnhandledException(RuntimeException e, HttpServletRequest request) {
+        log.error("Erro não catalogado", e);
+        return new ErrorResponse(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ocorreu um erro inesperado, entre em contato com a administração.",
+                List.of(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
+                                                               HttpServletRequest request) {
+        log.error("Erro na validação: {}", e.getMessage());
+        List<ErrorField> errorsList = e.getFieldErrors()
+                .stream()
+                .map(fe -> new ErrorField(fe.getField(), fe.getDefaultMessage()))
+                .collect(Collectors.toList());
+
+        return new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação",
+                errorsList,
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(DuplicateRegisterException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDuplicateRegisterException(DuplicateRegisterException e, HttpServletRequest request) {
+        log.error("Erro de dados duplicados: {}", e.getMessage());
+        return ErrorResponse.conflict(e.getMessage(),
+                request.getRequestURI());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleTypeMismatch(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
+        log.error("Erro conflito de tipo: {}", e.getMessage());
+        return new ErrorResponse(LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "O parâmetro '" + e.getName() + "' deve ser um UUID válido.",
+                List.of(),
+                request.getRequestURI()
+        );
+    }
+
+    /*AO ADICIONAR SISTEMA DE SEGURANÇA NA APLICAÇÃO DEVE SER REVISADO ESTA PARTE
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        log.error("Erro acesso não permitido: {}", e.getMessage());
+        return new ErrorResponse(LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "Acesso Negado.",
+                List.of(),
+                request.getRequestURI()
+        );
+    }
+*/
+
+    @ExceptionHandler(EntityInUseException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEntityInUseException(EntityInUseException e, HttpServletRequest request) {
+        log.error("Erro entidade em uso : {}", e.getMessage());
+        return new ErrorResponse(LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                e.getMessage(),
+                List.of(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleResourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
+        log.error("Erro o recurso requisitado não existe: {}", e.getMessage());
+        return new ErrorResponse(LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                e.getMessage(),
+                List.of(),
+                request.getRequestURI());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleInvalidCredentialsException(InvalidCredentialsException e, HttpServletRequest request) {
+        log.error("Erro falha de autenticação, credenciais inválidas: {}", e.getMessage());
+        return new ErrorResponse(LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                e.getMessage(),
+                List.of(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(OperationNotPermittedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleOperationNotPermittedException(OperationNotPermittedException e, HttpServletRequest request) {
+        log.error("Erro operação não autorizada, acesso negado: {}", e.getMessage());
+        return ErrorResponse.defaultError(e.getMessage(),
+                request.getRequestURI());
+    }
+
+}
