@@ -40,7 +40,7 @@ public class UserController implements GenericController {
     @Operation(summary = "Atualizar.", description = "Atualizar um usuário dentro do sistema.")
     public ResponseEntity<Void> updateUser(@PathVariable("userId") UUID userId,@RequestBody @Valid UserRequestDTO dto) {
 
-        log.info("Atualizando o usuário de id: {}", dto.name());
+        log.info("Atualizando o usuário: {}", dto.name());
         service.update(userId,dto);
         return ResponseEntity.noContent().build();
 
@@ -57,6 +57,13 @@ public class UserController implements GenericController {
 
     }
 
+    @GetMapping("/{userId}")
+    @Operation(summary = "Encontrar.", description = "Pesquisar por um usuário dentro do sistema.")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("userId") UUID userId) {
+
+        return ResponseEntity.ok(service.getById(userId));
+
+    }
 
     @GetMapping
     @Operation(summary = "Pesquisar.", description = "Pesquisar por um usuário dentro do sistema.")
@@ -66,14 +73,6 @@ public class UserController implements GenericController {
                                                             @RequestParam(value = "user_type", required = false) UserType userType
     ) {
         return ResponseEntity.ok(service.searchByExample(name, login, email, userType));
-    }
-
-    @GetMapping("/{userId}")
-    @Operation(summary = "Encontrar.", description = "Pesquisar por um usuário dentro do sistema.")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("userId") UUID userId) {
-
-        return ResponseEntity.ok(service.getById(userId));
-
     }
 
 }

@@ -77,3 +77,6 @@ docker-compose.override.yml
 .env
 .env.*
 !.env.example
+/tibia-jester.log
+/tibia-jester.log.2026-08-23.0.gz
+/tibia-jester.log.2026-08-25.0.gz

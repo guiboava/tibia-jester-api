@@ -1,6 +1,6 @@
 package io.github.guiboava.tibiajesterapi.entity.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,16 +9,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hunts")
+@Table(name = "images")
 @Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class Hunt {
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,23 +26,12 @@ public class Hunt {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "level_min", nullable = false)
-    private Integer levelMin;
+    @Column(name = "size", nullable = false)
+    private Long size;
 
-    @Column(name = "level_max", nullable = false)
-    private Integer levelMax;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "image_id")
-    private Image image;
-
-    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<HuntStatus> huntStatusLists = new HashSet<>();
-
-    @OneToMany(mappedBy = "hunt", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<HuntLocker> huntLockers = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "extension", nullable = false)
+    private ImageExtension extension;
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
@@ -54,5 +41,11 @@ public class Hunt {
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
 
+    @Lob
+    @Column(name = "image_file", nullable = false)
+    private byte[] file;
 
+    public String getFileName() {
+        return getName() + "." + getExtension().name().toLowerCase();
+    }
 }

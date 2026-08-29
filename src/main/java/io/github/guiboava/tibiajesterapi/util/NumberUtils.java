@@ -5,7 +5,7 @@ import org.mapstruct.Named;
 public class NumberUtils {
 
     public NumberUtils() {
-    } // impede instanciação
+    }
 
     @Named("onlyDigits")
     public static String onlyDigits(String value) {

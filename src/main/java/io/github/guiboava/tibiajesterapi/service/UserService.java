@@ -57,16 +57,15 @@ public class UserService {
 
     }
 
-    private User getEntityById(UUID userId) {
-
-        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado para o id " + userId));
-    }
-
-
     public UserResponseDTO getById(UUID userId) {
 
         return userRepository.findById(userId).map(userMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado nenhum dado de usuário para o paciente."));
 
+    }
+
+    private User getEntityById(UUID userId) {
+
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado para o id " + userId));
     }
 
     public List<UserResponseDTO> searchByExample(String name, String login, String email, UserType userType) {
