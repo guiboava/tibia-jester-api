@@ -3,8 +3,11 @@ package io.github.guiboava.tibiajesterapi.service;
 import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.ImageMapper;
+import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import io.github.guiboava.tibiajesterapi.entity.model.Image;
 import io.github.guiboava.tibiajesterapi.repository.ImageRepository;
+import io.github.guiboava.tibiajesterapi.util.ImagePlaceholderUtils;
+import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import io.github.guiboava.tibiajesterapi.validator.ImageValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -12,9 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -30,31 +31,40 @@ public class ImageService {
 
 
     @Transactional
+    public Image saveEntity(ImageRequestDTO dto) {
+
+        Image image = dto == null || dto.file() == null || dto.file().isEmpty() ? new Image() : imageMapper.toEntity(dto);
+
+        applyPlaceholder(image);
+
+        imageValidator.validate(image);
+
+        return imageRepository.save(image);
+    }
+
+    @Transactional
     public UUID save(ImageRequestDTO dto) {
+        return saveEntity(dto).getId();
+    }
 
-        Image image = imageMapper.toEntity(dto);
-        return imageRepository.save(image).getId();
+    @Transactional
+    public void update(UUID imageId, ImageRequestDTO dto) {
 
+        Image image = imageRepository.getById(imageId);
+
+        if (dto != null && dto.file() != null && !dto.file().isEmpty()) {
+            imageMapper.updateEntityFromDto(dto, image);
+        }
+
+        imageValidator.validate(image);
+        imageRepository.save(image);
     }
 
     @Transactional
     public void delete(UUID imageId) {
 
         Image image = imageRepository.getById(imageId);
-        imageValidator.validate(image);
         imageRepository.delete(image);
-
-
-    }
-
-    @Transactional
-    public void update(UUID imageId, ImageRequestDTO dto) {
-
-        Image image = imageRepository.getById((imageId));
-
-        imageMapper.updateEntityFromDto(dto, image);
-        imageValidator.validate(image);
-        imageRepository.save(image);
 
     }
 
@@ -80,7 +90,7 @@ public class ImageService {
         List<Image> images = imageRepository.findAll();
 
         return images.stream().map(image -> {
-            var url = buildImageURL(image);
+            var url = ImageURLBuilderUtils.buildImageURL(image);
             return imageMapper.toDTO(image,url.toString());
         }).collect(Collectors.toSet());
 
@@ -88,10 +98,18 @@ public class ImageService {
 
     }
 
-    private URI buildImageURL(Image image) {
-        return ServletUriComponentsBuilder
-                .fromCurrentRequestUri().path("/" + image.getId()).build()
-                .toUri();
+
+    private void applyPlaceholder(Image image) {
+
+        if (image.getFile() == null) {
+            byte[] placeholder = ImagePlaceholderUtils.getImage();
+
+            image.setFile(placeholder);
+            image.setSize((long) placeholder.length);
+            image.setName("tibia_jester_no_image.png");
+            image.setExtension(ImageExtension.PNG);
+        }
     }
+
 
 }

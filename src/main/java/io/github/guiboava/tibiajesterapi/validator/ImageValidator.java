@@ -2,6 +2,7 @@ package io.github.guiboava.tibiajesterapi.validator;
 
 import io.github.guiboava.tibiajesterapi.entity.model.Image;
 import io.github.guiboava.tibiajesterapi.repository.ImageRepository;
+import io.github.guiboava.tibiajesterapi.util.ImagePlaceholderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

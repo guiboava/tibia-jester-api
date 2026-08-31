@@ -21,12 +21,13 @@ public abstract class ImageMapper {
 
     @Mapping(target = "name", expression = "java(dto.file().getOriginalFilename())")
     @Mapping(target = "size", expression = "java(dto.file().getSize())")
+    @Mapping(target = "file", expression = "java(mapFile(dto.file()))")
     @Mapping(target = "extension", expression = "java(mapExtension(dto.file()))")
-    @Mapping(target = "file", source = "file")
     public abstract Image toEntity(ImageRequestDTO dto);
 
     @Mapping(target = "name", expression = "java(dto.file().getOriginalFilename())")
     @Mapping(target = "size", expression = "java(dto.file().getSize())")
+    @Mapping(target = "file", expression = "java(mapFile(dto.file()))")
     @Mapping(target = "extension", expression = "java(mapExtension(dto.file()))")
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
@@ -43,13 +44,27 @@ public abstract class ImageMapper {
     }
 
     protected ImageExtension mapExtension(MultipartFile file) {
-        return switch (file.getContentType()) {
+        String contentType = file.getContentType();
+
+        if (contentType == null || contentType.equals(MediaType.APPLICATION_OCTET_STREAM_VALUE)) {
+            String filename = file.getOriginalFilename();
+            if (filename != null) {
+                String lower = filename.toLowerCase();
+                if (lower.endsWith(".png")) return ImageExtension.PNG;
+                if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return ImageExtension.JPEG;
+                if (lower.endsWith(".gif")) return ImageExtension.GIF;
+            }
+            throw new IllegalArgumentException(
+                    "Formato de imagem não suportado: Content-Type ausente e extensão desconhecida (arquivo: "
+                            + filename + ")");
+        }
+
+        return switch (contentType) {
             case MediaType.IMAGE_JPEG_VALUE -> ImageExtension.JPEG;
             case MediaType.IMAGE_PNG_VALUE -> ImageExtension.PNG;
             case MediaType.IMAGE_GIF_VALUE -> ImageExtension.GIF;
             default -> throw new IllegalArgumentException(
-                    "Formato de imagem não suportado: "
-                            + file.getContentType()
+                    "Formato de imagem não suportado: " + contentType
             );
         };
     }

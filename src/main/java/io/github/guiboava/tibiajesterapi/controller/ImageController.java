@@ -29,6 +29,7 @@ public class ImageController implements GenericController {
     public ResponseEntity<Void> createImage(
             @Valid @ModelAttribute ImageRequestDTO dto) {
 
+
         log.info("Imagem recebida nome: {}, tamanho: {}", dto.file().getOriginalFilename(), BytesFormatUtils.formatBytes(dto.file().getSize()));
 
         URI uri = generateHeaderLocation(service.save(dto));
@@ -38,7 +39,7 @@ public class ImageController implements GenericController {
 
     @PutMapping(value = "/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Atualizar", description = "Atualizar um usuário dentro do sistema.")
-    public ResponseEntity<Void> updateImage(@Valid @ModelAttribute ImageRequestDTO dto, @PathVariable UUID imageId) {
+    public ResponseEntity<Void> updateImage(@PathVariable UUID imageId, @Valid @ModelAttribute ImageRequestDTO dto) {
 
         log.info("Atualizando a imagem de id: {}", imageId);
         service.update(imageId, dto);
