@@ -8,6 +8,7 @@ import io.github.guiboava.tibiajesterapi.entity.model.User;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.UserRepository;
 import io.github.guiboava.tibiajesterapi.validator.UserValidator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -38,7 +39,7 @@ public class UserService {
 
     public void update(UUID userId, UserRequestDTO dto) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado para o id " + userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado para o id " + userId));
         userMapper.updateEntityFromDto(dto, user);
 
         userValidator.validate(user);
@@ -52,7 +53,8 @@ public class UserService {
 
     public void delete(UUID userId) {
 
-        User user = getEntityById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
         userRepository.delete(user);
 
     }
@@ -61,11 +63,6 @@ public class UserService {
 
         return userRepository.findById(userId).map(userMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado nenhum dado de usuário para o paciente."));
 
-    }
-
-    private User getEntityById(UUID userId) {
-
-        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado para o id " + userId));
     }
 
     public List<UserResponseDTO> searchByExample(String name, String login, String email, UserType userType) {

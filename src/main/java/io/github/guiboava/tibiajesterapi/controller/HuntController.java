@@ -75,7 +75,7 @@ public class HuntController implements GenericController{
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas hunts", description = "Mostra todas hunts salvas no sistema.")
+    @Operation(summary = "Listar todas hunts.", description = "Mostra todas hunts salvas no sistema.")
     public ResponseEntity<Set<HuntResponseDTO>> getAllHunts() {
 
         return ResponseEntity.ok(service.getAll());
