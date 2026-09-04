@@ -90,7 +90,7 @@ public class HuntService {
 
     }
 
-    private Hunt getEntityById(UUID huntId) {
+    protected Hunt getEntityById(UUID huntId) {
         return huntRepository.findById(huntId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Hunt não encontrada: " + huntId

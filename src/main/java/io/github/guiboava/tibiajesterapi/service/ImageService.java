@@ -5,6 +5,7 @@ import io.github.guiboava.tibiajesterapi.controller.dto.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.ImageMapper;
 import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import io.github.guiboava.tibiajesterapi.entity.model.Image;
+import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.ImageRepository;
 import io.github.guiboava.tibiajesterapi.util.ImagePlaceholderUtils;
 import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
@@ -50,7 +51,7 @@ public class ImageService {
     @Transactional
     public void update(UUID imageId, ImageRequestDTO dto) {
 
-        Image image = imageRepository.getById(imageId);
+        Image image = getEntityById(imageId);
 
         if (dto != null && dto.file() != null && !dto.file().isEmpty()) {
             imageMapper.updateEntityFromDto(dto, image);
@@ -63,7 +64,7 @@ public class ImageService {
     @Transactional
     public void delete(UUID imageId) {
 
-        Image image = imageRepository.getById(imageId);
+        Image image = getEntityById(imageId);
         imageRepository.delete(image);
 
     }
@@ -94,8 +95,6 @@ public class ImageService {
             return imageMapper.toDTO(image,url.toString());
         }).collect(Collectors.toSet());
 
-
-
     }
 
 
@@ -111,5 +110,8 @@ public class ImageService {
         }
     }
 
+    private Image getEntityById(UUID imageId) {
+        return imageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("Imagem não encontrada."));
+    }
 
 }

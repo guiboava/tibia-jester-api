@@ -7,7 +7,6 @@ import io.github.guiboava.tibiajesterapi.entity.model.World;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.WorldRepository;
 import io.github.guiboava.tibiajesterapi.validator.WorldValidator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,7 @@ public class WorldService {
 
     public void update(UUID worldId, WorldRequestDTO dto) {
 
-        World world = worldRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + worldId));
+        World world = getEntityById(worldId);
         worldMapper.updateEntityFromDto(dto, world);
 
         worldValidator.validate(world);
@@ -44,7 +43,7 @@ public class WorldService {
 
     public void delete(UUID worldId) {
 
-        World world = worldRepository.findById(worldId).orElseThrow(() -> new EntityNotFoundException("Mundo não encontrado."));
+        World world = getEntityById(worldId);
 
         worldRepository.delete(world);
 
@@ -62,4 +61,9 @@ public class WorldService {
 
 
     }
+
+    private World getEntityById(UUID worldId) {
+        return worldRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + worldId));
+    }
+
 }

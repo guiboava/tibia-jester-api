@@ -7,7 +7,6 @@ import io.github.guiboava.tibiajesterapi.entity.model.LatestNew;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.LatestNewRepository;
 import io.github.guiboava.tibiajesterapi.validator.LatestNewValidator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,7 @@ public class LatestNewService {
 
     public void update(UUID latestNewId, LatestNewRequestDTO dto) {
 
-        LatestNew latestNew = latestNewRepository.findById(latestNewId).orElseThrow(() -> new ResourceNotFoundException("Novidade não encontrado para o id " + latestNewId));
+        LatestNew latestNew = getEntityById(latestNewId);
         latestNewMapper.updateEntityFromDto(dto, latestNew);
 
         latestNewValidator.validate(latestNew);
@@ -44,7 +43,7 @@ public class LatestNewService {
 
     public void delete(UUID latestNewId) {
 
-        LatestNew latestNew = latestNewRepository.findById(latestNewId).orElseThrow(() -> new EntityNotFoundException("Novidade não encontrado."));
+        LatestNew latestNew = getEntityById(latestNewId);
 
         latestNewRepository.delete(latestNew);
 
@@ -60,6 +59,10 @@ public class LatestNewService {
 
         return latestNewRepository.findAll().stream().map(latestNewMapper::toDTO).collect(Collectors.toSet());
 
-
     }
+
+    private LatestNew getEntityById(UUID latestNewId) {
+        return latestNewRepository.findById(latestNewId).orElseThrow(() -> new ResourceNotFoundException("Novidade não encontrada."));
+    }
+
 }
