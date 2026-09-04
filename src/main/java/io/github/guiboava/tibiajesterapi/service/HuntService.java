@@ -11,7 +11,6 @@ import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import io.github.guiboava.tibiajesterapi.validator.HuntValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,7 @@ public class HuntService {
     @Transactional
     public void update(UUID huntId, @Valid HuntRequestDTO huntDto, @Valid ImageRequestDTO imageDto) {
 
-        var hunt = huntRepository.getById(huntId);
+        Hunt hunt = getEntityById(huntId);
 
         imageService.update(hunt.getImage().getId(), imageDto);
 
@@ -56,7 +55,7 @@ public class HuntService {
     @Transactional
     public void delete(UUID huntId) {
 
-        Hunt hunt = huntRepository.getById(huntId);
+        Hunt hunt = getEntityById(huntId);
 
         imageService.delete(hunt.getImage().getId());
 
@@ -79,7 +78,7 @@ public class HuntService {
 
     }
 
-    public @Nullable Set<HuntResponseDTO> getAll() {
+    public Set<HuntResponseDTO> getAll() {
 
         List<Hunt> hunts = huntRepository.findAll();
 
@@ -90,4 +89,12 @@ public class HuntService {
                 }).collect(Collectors.toSet());
 
     }
+
+    private Hunt getEntityById(UUID huntId) {
+        return huntRepository.findById(huntId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Hunt não encontrada: " + huntId
+                ));
+    }
+
 }

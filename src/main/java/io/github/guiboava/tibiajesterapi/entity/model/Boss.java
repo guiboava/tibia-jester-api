@@ -1,6 +1,5 @@
 package io.github.guiboava.tibiajesterapi.entity.model;
 
-import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,17 +26,9 @@ public class Boss {
 
     private String name;
 
-    @Column(name = "image", nullable = false)
-    @Lob
-    private byte[] image;
-
-    @Column(name = "image_extension", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ImageExtension imageExtension;
-
-    public String getFileName() {
-        return name + "." + imageExtension.name().toLowerCase();
-    }
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @OneToMany(mappedBy = "boss")
     private Set<UserBossAlarm> userBossAlarms = new HashSet<>();
