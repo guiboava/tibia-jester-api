@@ -1,8 +1,8 @@
 package io.github.guiboava.tibiajesterapi.service;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.BossRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.BossResponseDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.BossRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.BossMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.Boss;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;

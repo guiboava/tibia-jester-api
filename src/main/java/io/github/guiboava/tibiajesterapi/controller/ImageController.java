@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.service.ImageService;
 import io.github.guiboava.tibiajesterapi.util.BytesFormatUtils;
 import io.swagger.v3.oas.annotations.Operation;

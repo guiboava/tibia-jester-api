@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntStatusRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntStatusResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.HuntStatusRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.HuntStatusResponseDTO;
 import io.github.guiboava.tibiajesterapi.service.HuntStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

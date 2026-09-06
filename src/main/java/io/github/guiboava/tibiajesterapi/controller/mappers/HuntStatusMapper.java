@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller.mappers;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntStatusRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntStatusResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.HuntStatusRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.HuntStatusResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.model.HuntStatus;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.UserRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.UserResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
 import io.github.guiboava.tibiajesterapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

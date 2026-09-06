@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.request;
 
 import io.github.guiboava.tibiajesterapi.entity.enums.Party;
 import io.github.guiboava.tibiajesterapi.entity.enums.Vocation;

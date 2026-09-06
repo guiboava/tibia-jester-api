@@ -1,8 +1,8 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.BossRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.BossResponseDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.BossRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
 import io.github.guiboava.tibiajesterapi.service.BossService;
 import io.github.guiboava.tibiajesterapi.util.BytesFormatUtils;
 import io.swagger.v3.oas.annotations.Operation;

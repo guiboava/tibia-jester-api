@@ -1,9 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller.mappers;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.UserRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldResponseDTO;
-import io.github.guiboava.tibiajesterapi.entity.model.User;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.WorldRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.WorldResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.model.World;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;

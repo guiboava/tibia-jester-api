@@ -1,5 +1,6 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.response;
 
+import io.github.guiboava.tibiajesterapi.controller.dto.error.ErrorField;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;

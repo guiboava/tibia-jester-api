@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

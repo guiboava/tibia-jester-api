@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.service;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.WorldRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.WorldResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.WorldMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.World;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
@@ -62,7 +62,7 @@ public class WorldService {
 
     }
 
-    private World getEntityById(UUID worldId) {
+    protected World getEntityById(UUID worldId) {
         return worldRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + worldId));
     }
 

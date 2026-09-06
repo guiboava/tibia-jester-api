@@ -1,8 +1,8 @@
 package io.github.guiboava.tibiajesterapi.controller.mappers;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.BossRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.BossResponseDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.BossRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.model.Boss;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;

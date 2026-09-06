@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.error;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

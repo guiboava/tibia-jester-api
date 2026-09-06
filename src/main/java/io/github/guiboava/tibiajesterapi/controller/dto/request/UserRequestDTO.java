@@ -1,4 +1,4 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.request;
 
 import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
 import io.swagger.v3.oas.annotations.media.Schema;

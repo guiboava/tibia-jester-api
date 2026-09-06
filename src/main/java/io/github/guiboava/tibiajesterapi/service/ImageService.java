@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.service;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.ImageMapper;
 import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import io.github.guiboava.tibiajesterapi.entity.model.Image;

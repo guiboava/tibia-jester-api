@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.WorldResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.WorldRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.WorldResponseDTO;
 import io.github.guiboava.tibiajesterapi.service.WorldService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

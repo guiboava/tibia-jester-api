@@ -1,8 +1,7 @@
-package io.github.guiboava.tibiajesterapi.controller.dto;
+package io.github.guiboava.tibiajesterapi.controller.dto.response;
 
 import io.github.guiboava.tibiajesterapi.entity.enums.Party;
 import io.github.guiboava.tibiajesterapi.entity.enums.Vocation;
-import io.github.guiboava.tibiajesterapi.entity.model.Hunt;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;

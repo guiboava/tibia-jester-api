@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.LatestNewRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.LatestNewResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.LatestNewRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.LatestNewResponseDTO;
 import io.github.guiboava.tibiajesterapi.service.LatestNewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

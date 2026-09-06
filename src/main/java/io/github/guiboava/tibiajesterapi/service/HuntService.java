@@ -1,8 +1,8 @@
 package io.github.guiboava.tibiajesterapi.service;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.HuntResponseDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.HuntRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.HuntResponseDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.HuntMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.Hunt;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;

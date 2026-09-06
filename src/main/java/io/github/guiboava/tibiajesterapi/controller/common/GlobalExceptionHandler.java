@@ -1,7 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller.common;
 
-import io.github.guiboava.tibiajesterapi.controller.dto.ErrorField;
-import io.github.guiboava.tibiajesterapi.controller.dto.ErrorResponse;
+import io.github.guiboava.tibiajesterapi.controller.dto.error.ErrorField;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.ErrorResponse;
 import io.github.guiboava.tibiajesterapi.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
