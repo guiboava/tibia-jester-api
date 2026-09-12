@@ -59,7 +59,7 @@ public class GuildService {
 
     }
 
-    private Guild getEntityById(UUID guildId) {
+    protected Guild getEntityById(UUID guildId) {
 
         return guildRepository.findById(guildId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + guildId));
 

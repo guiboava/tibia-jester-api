@@ -30,7 +30,9 @@ public abstract class BossMapper {
         return new BossResponseDTO(
                 boss.getId(),
                 boss.getName(),
-                imageDTO
+                imageDTO,
+                boss.getCreatedDate(),
+                boss.getUpdatedDate()
         );
     }
 

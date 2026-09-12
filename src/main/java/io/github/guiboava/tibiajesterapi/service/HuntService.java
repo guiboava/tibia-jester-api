@@ -26,6 +26,7 @@ public class HuntService {
     private final HuntRepository huntRepository;
     private final HuntMapper huntMapper;
     private final HuntValidator huntValidator;
+
     private final ImageService imageService;
 
     @Transactional
@@ -68,7 +69,6 @@ public class HuntService {
         return huntRepository.findById(huntId)
                 .map(hunt -> {
                     var url = ImageURLBuilderUtils.buildImageURL(hunt.getImage());
-
                     return huntMapper.toDTO(hunt, url);
                 })
                 .orElseThrow(() ->

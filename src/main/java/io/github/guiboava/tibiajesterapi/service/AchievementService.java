@@ -59,7 +59,7 @@ public class AchievementService {
 
     }
 
-    private Achievement getEntityById(UUID achievementId) {
+    protected Achievement getEntityById(UUID achievementId) {
 
         return achievementRepository.findById(achievementId).orElseThrow(() -> new ResourceNotFoundException("Achievement não encontrado para o id " + achievementId));
 

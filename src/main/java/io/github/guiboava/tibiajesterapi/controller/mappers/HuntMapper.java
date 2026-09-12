@@ -32,7 +32,9 @@ public abstract class HuntMapper {
                 hunt.getName(),
                 hunt.getLevelMin(),
                 hunt.getLevelMax(),
-                imageDTO
+                imageDTO,
+                hunt.getCreatedDate(),
+                hunt.getUpdatedDate()
         );
     }
 

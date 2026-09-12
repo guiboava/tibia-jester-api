@@ -1,6 +1,7 @@
 package io.github.guiboava.tibiajesterapi.entity.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,6 +17,7 @@ import java.util.UUID;
                 columnNames = {"hunt_id", "world_id"}
         )
 )
+@Data
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
 public class HuntLocker {
