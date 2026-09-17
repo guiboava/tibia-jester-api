@@ -46,8 +46,13 @@ public class User {
     @JsonIgnore
     private Set<UserCharacter> userCharacters = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<UserBossAlarm> userBossAlarms = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_boss",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "boss_id")
+    )
+    private Set<Boss> bosses = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)

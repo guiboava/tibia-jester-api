@@ -3,10 +3,8 @@ package io.github.guiboava.tibiajesterapi.service;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.CharacterRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.CharacterResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.CharacterMapper;
-import io.github.guiboava.tibiajesterapi.entity.model.Achievement;
+import io.github.guiboava.tibiajesterapi.entity.model.*;
 import io.github.guiboava.tibiajesterapi.entity.model.Character;
-import io.github.guiboava.tibiajesterapi.entity.model.Guild;
-import io.github.guiboava.tibiajesterapi.entity.model.World;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.CharacterRepository;
 import io.github.guiboava.tibiajesterapi.validator.CharacterValidator;
@@ -27,6 +25,7 @@ public class CharacterService {
     private final CharacterRepository characterRepository;
 
     private final WorldService worldService;
+    private final AccountInformationService accountInformationService;
     private final AchievementService achievementService;
     private final GuildService guildService;
 
@@ -34,9 +33,8 @@ public class CharacterService {
     public UUID save(CharacterRequestDTO dto) {
 
         Character character = characterMapper.toEntity(dto);
-        applyRelations(character, dto);
+        characterValidator.validate(applyRelations(character, dto));
 
-        characterValidator.validate(character);
         return characterRepository.save(character).getId();
     }
 
@@ -44,8 +42,8 @@ public class CharacterService {
     public void update(UUID characterId, CharacterRequestDTO dto) {
 
         Character character = getEntityById(characterId);
-        applyRelations(character, dto);
         characterMapper.updateEntityFromDto(dto, character);
+        applyRelations(character, dto);
 
         characterValidator.validate(character);
         characterRepository.save(character);
@@ -73,24 +71,19 @@ public class CharacterService {
                 .orElseThrow(() -> new ResourceNotFoundException("Personagem não encontrado para o id " + characterId));
     }
 
-    private void applyRelations(Character character, CharacterRequestDTO dto) {
+    private Character applyRelations(Character character, CharacterRequestDTO dto) {
 
-        World world = dto.worldId() == null
-                ? null
-                : worldService.getEntityById(dto.worldId());
-
-        Guild guild = dto.guildId() == null
-                ? null
-                : guildService.getEntityById(dto.guildId());
+        World world = worldService.getEntityById(dto.worldId());
+        AccountInformation accountInformation = accountInformationService.getEntityById(dto.accountInformationId());
+        Guild guild = guildService.getEntityById(dto.guildId());
+        Set<Achievement> achievement = dto.achievementIds().stream().map(achievementService::getEntityById).collect(Collectors.toSet());
 
         character.setWorld(world);
+        character.setAccountInformation(accountInformation);
         character.setGuild(guild);
+        character.setAchievements(achievement);
 
-        if (dto.achievementIds() != null) {
-            Set<Achievement> achievements = dto.achievementIds().stream()
-                    .map(achievementService::getEntityById)
-                    .collect(Collectors.toSet());
-            character.setAchievements(achievements);
-        }
+        return character;
+
     }
 }

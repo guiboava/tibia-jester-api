@@ -2,7 +2,6 @@ package io.github.guiboava.tibiajesterapi.controller.mappers;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.BossRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.response.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.model.Boss;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
@@ -10,13 +9,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.URI;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = ImageMapper.class)
 public abstract class BossMapper {
 
     @Autowired
-    private ImageMapper imageMapper;
+    protected ImageMapper imageMapper;
 
     public abstract Boss toEntity(BossRequestDTO dto);
 
@@ -24,18 +21,8 @@ public abstract class BossMapper {
     @Mapping(target = "updatedDate", ignore = true)
     public abstract void updateEntityFromDto(@Valid BossRequestDTO dto, @MappingTarget Boss boss);
 
-    public BossResponseDTO toDTO(Boss boss, URI imageUrl) {
-        ImageResponseDTO imageDTO = imageMapper.toDTO(boss.getImage(), imageUrl.toString());
-
-        return new BossResponseDTO(
-                boss.getId(),
-                boss.getName(),
-                imageDTO,
-                boss.getCreatedDate(),
-                boss.getUpdatedDate()
-        );
-    }
-
+    @Mapping(target = "image", expression = "java(imageMapper.toDTO(boss.getImage()))")
+    public abstract BossResponseDTO toDTO(Boss boss);
 
     public abstract BossRequestDTO toRequestDTO(Boss boss);
 }

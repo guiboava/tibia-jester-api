@@ -6,6 +6,7 @@ import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.ImageResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import io.github.guiboava.tibiajesterapi.entity.model.Image;
+import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,6 +35,12 @@ public abstract class ImageMapper {
     public abstract void updateEntityFromDto(@Valid ImageRequestDTO dto, @MappingTarget Image image);
 
     public abstract ImageResponseDTO toDTO(Image image, String url);
+
+    public ImageResponseDTO toDTO(Image image) {
+        if (image == null) return null;
+        String url = ImageURLBuilderUtils.buildImageURL(image).toString();
+        return toDTO(image, url);
+    }
 
     protected byte[] mapFile(MultipartFile file) {
         try {

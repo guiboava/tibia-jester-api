@@ -30,8 +30,8 @@ public class Boss {
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @OneToMany(mappedBy = "boss")
-    private Set<UserBossAlarm> userBossAlarms = new HashSet<>();
+    @ManyToMany(mappedBy = "bosses")
+    private Set<User> users = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)

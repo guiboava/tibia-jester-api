@@ -4,6 +4,8 @@ import io.github.guiboava.tibiajesterapi.entity.enums.ImageExtension;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -42,7 +44,8 @@ public class Image {
     private LocalDateTime updatedDate;
 
     @Lob
-    @Column(name = "image_file", nullable = false)
+    @Column(name = "image_file", nullable = false, columnDefinition = "bytea")
+    @JdbcTypeCode(SqlTypes.VARBINARY)
     private byte[] file;
 
     public String getFileName() {

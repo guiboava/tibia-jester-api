@@ -70,7 +70,7 @@ public class BossService {
                 .map(boss -> {
                     var url = ImageURLBuilderUtils.buildImageURL(boss.getImage());
 
-                    return bossMapper.toDTO(boss, url);
+                    return bossMapper.toDTO(boss);
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Não foi encontrado nenhum dado de boss.")
@@ -86,12 +86,12 @@ public class BossService {
         return bosses.stream()
                 .map(boss -> {
                     var url = ImageURLBuilderUtils.buildImageURL(boss.getImage());
-                    return bossMapper.toDTO(boss, url);
+                    return bossMapper.toDTO(boss);
                 }).collect(Collectors.toSet());
 
     }
 
-    private Boss getEntityById(UUID bossId) {
+    public Boss getEntityById(UUID bossId) {
         return bossRepository.findById(bossId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Boss não encontrado: " + bossId

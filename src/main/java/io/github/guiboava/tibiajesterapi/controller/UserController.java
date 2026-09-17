@@ -1,6 +1,8 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
+import io.github.guiboava.tibiajesterapi.controller.dto.request.BossAlarmRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
 import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
 import io.github.guiboava.tibiajesterapi.service.UserService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController()
@@ -73,6 +76,23 @@ public class UserController implements GenericController {
                                                             @RequestParam(value = "user_type", required = false) UserType userType
     ) {
         return ResponseEntity.ok(service.searchByExample(name, login, email, userType));
+    }
+
+    @PutMapping("{userId}/userBossAlarm")
+    @Operation(summary = "Adicionar Boss no alarme.", description = "Adicionar/modificar a lista de Boss Alarme")
+    public ResponseEntity<Void> createUser(@PathVariable("userId") UUID userId, @RequestBody @Valid BossAlarmRequestDTO dto) {
+
+        service.addBossesToAlarm(userId, dto);
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @GetMapping("{userId}/userBossAlarm")
+    @Operation(summary = "Adicionar Boss no alarme.", description = "Adicionar/modificar a lista de Boss Alarme")
+    public ResponseEntity<Set<BossResponseDTO>> createUser(@PathVariable("userId") UUID userId) {
+
+        return ResponseEntity.ok(service.getBossesAlarmFromUser(userId));
+
     }
 
 }

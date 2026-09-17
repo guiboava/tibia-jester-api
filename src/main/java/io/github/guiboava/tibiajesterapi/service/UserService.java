@@ -1,9 +1,12 @@
 package io.github.guiboava.tibiajesterapi.service;
 
+import io.github.guiboava.tibiajesterapi.controller.dto.request.BossAlarmRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.UserMapper;
 import io.github.guiboava.tibiajesterapi.entity.enums.UserType;
+import io.github.guiboava.tibiajesterapi.entity.model.Boss;
 import io.github.guiboava.tibiajesterapi.entity.model.User;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.UserRepository;
@@ -12,9 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class UserService {
     private final UserValidator userValidator;
     //private final PasswordEncoder encoder;    ATENÇÃO FUTURAMENTE DEVE SER FEITA A CAMADA DE SPRING SECURITY DO APP
 
+    private final BossService bossService;
 
     public UUID save(UserRequestDTO dto) {
 
@@ -75,6 +82,28 @@ public class UserService {
 
         return userRepository.findAll(userExample).stream().map(userMapper::toDTO).toList();
 
+    }
+
+    @Transactional
+    public void addBossesToAlarm(UUID userId, BossAlarmRequestDTO dto) {
+
+        User user = getEntityById(userId);
+        Set<Boss> bosses = dto.bossIds().stream().map(bossService::getEntityById).collect(Collectors.toSet());
+
+        user.setBosses(bosses);
+
+        userRepository.save(user);
+
+    }
+
+    @Transactional(readOnly = true)
+    public Set<BossResponseDTO> getBossesAlarmFromUser(UUID userId) {
+
+        User user = getEntityById(userId);
+
+        return user.getBosses().stream()
+                .map(boss -> bossService.getById(boss.getId()))
+                .collect(Collectors.toSet());
     }
 
     private User getEntityById(UUID worldId) {
