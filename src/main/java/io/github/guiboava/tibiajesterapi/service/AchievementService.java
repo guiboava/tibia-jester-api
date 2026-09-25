@@ -31,7 +31,8 @@ public class AchievementService {
 
     }
 
-    public void update(UUID achievementId, AchievementRequestDTO dto) {
+    public void update(UUID achievementId,
+                       AchievementRequestDTO dto) {
 
         Achievement achievement = getEntityById(achievementId);
         achievementMapper.updateEntityFromDto(dto, achievement);
@@ -55,13 +56,19 @@ public class AchievementService {
 
     public Set<AchievementResponseDTO> getAll() {
 
-        return achievementRepository.findAll().stream().map(achievementMapper::toDTO).collect(Collectors.toSet());
+        return achievementRepository.findAll()
+                .stream()
+                .map(achievementMapper::toDTO)
+                .collect(Collectors.toSet());
 
     }
 
     protected Achievement getEntityById(UUID achievementId) {
 
-        return achievementRepository.findById(achievementId).orElseThrow(() -> new ResourceNotFoundException("Achievement não encontrado para o id " + achievementId));
+        return achievementRepository.findById(achievementId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Achievement não encontrado para o id " + achievementId)
+                );
 
     }
 

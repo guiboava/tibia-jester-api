@@ -1,7 +1,6 @@
 package io.github.guiboava.tibiajesterapi.service;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.BossAlarmRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.request.UserCharacterRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
@@ -12,7 +11,6 @@ import io.github.guiboava.tibiajesterapi.entity.model.User;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.UserRepository;
 import io.github.guiboava.tibiajesterapi.validator.UserValidator;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -45,7 +43,8 @@ public class UserService {
 
     }
 
-    public void update(UUID userId, UserRequestDTO dto) {
+    public void update(UUID userId,
+                       UserRequestDTO dto) {
 
         User user = getEntityById(userId);
         userMapper.updateEntityFromDto(dto, user);
@@ -68,29 +67,51 @@ public class UserService {
 
     public UserResponseDTO getById(UUID userId) {
 
-        return userRepository.findById(userId).map(userMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado."));
+        return userRepository.findById(userId)
+                .map(userMapper::toDTO)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Usuário não encontrado."
+                        )
+                );
 
     }
 
-    public List<UserResponseDTO> searchByExample(String name, String login, String email, UserType userType) {
+    public List<UserResponseDTO> searchByExample(String name,
+                                                 String login,
+                                                 String email,
+                                                 UserType userType) {
+
         var user = new User();
         user.setName(name);
         user.setLogin(login);
         user.setEmail(email);
         user.setUserType(userType);
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
         Example<User> userExample = Example.of(user, matcher);
 
-        return userRepository.findAll(userExample).stream().map(userMapper::toDTO).toList();
+        return userRepository.findAll(userExample)
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
 
     }
 
     @Transactional
-    public void addBossesToAlarm(UUID userId, BossAlarmRequestDTO dto) {
+    public void addBossesToAlarm(UUID userId,
+                                 BossAlarmRequestDTO dto) {
+
+        Set<Boss> bosses = dto.bossIds()
+                .stream()
+                .map(bossService::getEntityById)
+                .collect(Collectors.toSet());
 
         User user = getEntityById(userId);
-        Set<Boss> bosses = dto.bossIds().stream().map(bossService::getEntityById).collect(Collectors.toSet());
 
         user.setBosses(bosses);
 
@@ -101,14 +122,20 @@ public class UserService {
     @Transactional(readOnly = true)
     public Set<BossResponseDTO> getBossesAlarmFromUser(UUID userId) {
 
-        User user = getEntityById(userId);
-
-        return user.getBosses().stream()
-                .map(boss -> bossService.getById(boss.getId()))
+        return getEntityById(userId)
+                .getBosses()
+                .stream()
+                .map(boss ->
+                        bossService.getById(boss.getId()))
                 .collect(Collectors.toSet());
     }
 
     protected User getEntityById(UUID worldId) {
-        return userRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado."));
+        return userRepository.findById(worldId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Usuário não encontrado."
+                        )
+                );
     }
 }

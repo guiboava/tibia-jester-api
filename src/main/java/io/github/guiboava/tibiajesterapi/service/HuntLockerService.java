@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,6 +29,7 @@ public class HuntLockerService {
     private final HuntService huntService;
     private final WorldService worldService;
 
+    @Transactional
     public UUID save(HuntLockerRequestDTO dto) {
 
         HuntLocker huntLocker = huntLockerMapper.toEntity(dto);
@@ -44,6 +44,7 @@ public class HuntLockerService {
 
     }
 
+    @Transactional
     public void update(UUID huntLockerId, HuntLockerRequestDTO dto) {
 
         HuntLocker huntLocker = getEntityById(huntLockerId);
@@ -60,6 +61,7 @@ public class HuntLockerService {
 
     }
 
+    @Transactional
     public void delete(UUID huntLockerId) {
 
         HuntLocker huntLocker = getEntityById(huntLockerId);
@@ -76,7 +78,9 @@ public class HuntLockerService {
                     return huntLockerMapper.toDTO(huntLocker, url);
                 })
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Não foi encontrado nenhum dado de hunt.")
+                        new ResourceNotFoundException(
+                                "Locker de hunt não encontrado para o id: " + huntLockerId
+                        )
                 );
 
     }
@@ -84,19 +88,25 @@ public class HuntLockerService {
     @Transactional(readOnly = true)
     public Set<HuntLockerResponseDTO> getAll() {
 
-        List<HuntLocker> huntLockers = huntLockerRepository.findAll();
-
-        return huntLockers.stream()
+        return huntLockerRepository.findAll()
+                .stream()
                 .map(huntLocker -> {
-                    var url = ImageURLBuilderUtils.buildImageURL(huntLocker.getHunt().getImage());
+                    var url = ImageURLBuilderUtils.buildImageURL(
+                            huntLocker.getHunt().getImage()
+                    );
                     return huntLockerMapper.toDTO(huntLocker, url);
-                }).collect(Collectors.toSet());
-
+                })
+                .collect(Collectors.toSet());
     }
 
     protected HuntLocker getEntityById(UUID huntLockerId) {
 
-        return huntLockerRepository.findById(huntLockerId).orElseThrow(() -> new ResourceNotFoundException("Locker de hunt não encontrado para o id " + huntLockerId));
+        return huntLockerRepository.findById(huntLockerId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Locker de hunt não encontrado para o id " + huntLockerId
+                        )
+                );
 
     }
 

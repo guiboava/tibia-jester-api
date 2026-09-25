@@ -31,7 +31,8 @@ public class WorldService {
 
     }
 
-    public void update(UUID worldId, WorldRequestDTO dto) {
+    public void update(UUID worldId,
+                       WorldRequestDTO dto) {
 
         World world = getEntityById(worldId);
         worldMapper.updateEntityFromDto(dto, world);
@@ -51,19 +52,33 @@ public class WorldService {
 
     public WorldResponseDTO getById(UUID worldId) {
 
-        return worldRepository.findById(worldId).map(worldMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Não foi encrontrado nenhum dado de mundo"));
+        return worldRepository.findById(worldId)
+                .map(worldMapper::toDTO)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Mundo não encontrado para o id " + worldId
+                        )
+                );
 
     }
 
     public Set<WorldResponseDTO> getAll() {
 
-        return worldRepository.findAll().stream().map(worldMapper::toDTO).collect(Collectors.toSet());
+        return worldRepository.findAll()
+                .stream()
+                .map(worldMapper::toDTO)
+                .collect(Collectors.toSet());
 
 
     }
 
     protected World getEntityById(UUID worldId) {
-        return worldRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + worldId));
+        return worldRepository.findById(worldId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Mundo não encontrado para o id " + worldId
+                        )
+                );
     }
 
 }

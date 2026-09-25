@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,7 +48,8 @@ public class ImageService {
     }
 
     @Transactional
-    public void update(UUID imageId, ImageRequestDTO dto) {
+    public void update(UUID imageId,
+                       ImageRequestDTO dto) {
 
         Image image = getEntityById(imageId);
 
@@ -69,38 +69,37 @@ public class ImageService {
 
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<byte[]> getById(UUID imageId) {
 
-        var possibleImage = imageRepository.findById(imageId);
-        if (possibleImage.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        Image image = getEntityById(imageId);
 
-        Image image = possibleImage.get();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(image.getExtension().getMediaType());
         headers.setContentLength(image.getSize());
-        headers.setContentDispositionFormData("inline; filename=\"" + image.getFileName() + "\"", image.getFileName());
+        headers.setContentDispositionFormData(
+                "inline",
+                image.getFileName()
+        );
 
         return new ResponseEntity<>(image.getFile(), headers, HttpStatus.OK);
-
     }
 
+    @Transactional(readOnly = true)
     public Set<ImageResponseDTO> getAll() {
 
-        List<Image> images = imageRepository.findAll();
-
-        return images.stream().map(image -> {
-            var url = ImageURLBuilderUtils.buildImageURL(image);
-            return imageMapper.toDTO(image,url.toString());
-        }).collect(Collectors.toSet());
-
+        return imageRepository.findAll()
+                .stream()
+                .map(image -> imageMapper.toDTO(
+                        image,
+                        ImageURLBuilderUtils.buildImageURL(image).toString()
+                ))
+                .collect(Collectors.toSet());
     }
-
 
     private void applyPlaceholder(Image image) {
 
-        if (image.getFile() == null) {
+        if (image.getFile() == null || image.getFile().length == 0) {
             byte[] placeholder = ImagePlaceholderUtils.getImage();
 
             image.setFile(placeholder);
@@ -110,8 +109,13 @@ public class ImageService {
         }
     }
 
-    private Image getEntityById(UUID imageId) {
-        return imageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("Imagem não encontrada."));
+    protected Image getEntityById(UUID imageId) {
+        return imageRepository.findById(imageId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Imagem não encontrado para o id " + imageId
+                        )
+                );
     }
 
 }

@@ -31,7 +31,8 @@ public class LatestNewService {
 
     }
 
-    public void update(UUID latestNewId, LatestNewRequestDTO dto) {
+    public void update(UUID latestNewId,
+                       LatestNewRequestDTO dto) {
 
         LatestNew latestNew = getEntityById(latestNewId);
         latestNewMapper.updateEntityFromDto(dto, latestNew);
@@ -51,18 +52,33 @@ public class LatestNewService {
 
     public LatestNewResponseDTO getById(UUID latestNewId) {
 
-        return latestNewRepository.findById(latestNewId).map(latestNewMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Não foi encrontrado nenhum dado de novidade"));
+        return latestNewRepository.findById(latestNewId)
+                .map(latestNewMapper::toDTO)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Dados de novidade não encontrado para o id " + latestNewId
+                        )
+                );
 
     }
 
     public Set<LatestNewResponseDTO> getAll() {
 
-        return latestNewRepository.findAll().stream().map(latestNewMapper::toDTO).collect(Collectors.toSet());
+        return latestNewRepository.findAll()
+                .stream()
+                .map(latestNewMapper::toDTO)
+                .collect(Collectors.toSet());
 
     }
 
-    private LatestNew getEntityById(UUID latestNewId) {
-        return latestNewRepository.findById(latestNewId).orElseThrow(() -> new ResourceNotFoundException("Novidade não encontrada."));
+    protected LatestNew getEntityById(UUID latestNewId) {
+
+        return latestNewRepository.findById(latestNewId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Dados de novidade não encontrado para o id " + latestNewId
+                        )
+                );
     }
 
 }

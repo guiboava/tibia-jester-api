@@ -31,7 +31,8 @@ public class AccountInformationService {
 
     }
 
-    public void update(UUID accountInformationId, AccountInformationRequestDTO dto) {
+    public void update(UUID accountInformationId,
+                       AccountInformationRequestDTO dto) {
 
         AccountInformation accountInformation = getEntityById(accountInformationId);
         accountInformationMapper.updateEntityFromDto(dto, accountInformation);
@@ -55,13 +56,21 @@ public class AccountInformationService {
 
     public Set<AccountInformationResponseDTO> getAll() {
 
-        return accountInformationRepository.findAll().stream().map(accountInformationMapper::toDTO).collect(Collectors.toSet());
+        return accountInformationRepository.findAll()
+                .stream()
+                .map(accountInformationMapper::toDTO)
+                .collect(Collectors.toSet());
 
     }
 
     protected AccountInformation getEntityById(UUID accountInformationId) {
 
-        return accountInformationRepository.findById(accountInformationId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + accountInformationId));
+        return accountInformationRepository.findById(accountInformationId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Informação de conta não encontrado para o id " + accountInformationId
+                        )
+                );
 
     }
 

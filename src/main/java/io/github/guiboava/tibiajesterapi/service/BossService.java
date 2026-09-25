@@ -1,8 +1,8 @@
 package io.github.guiboava.tibiajesterapi.service;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.BossRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.BossMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.Boss;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
@@ -10,12 +10,10 @@ import io.github.guiboava.tibiajesterapi.repository.BossRepository;
 import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import io.github.guiboava.tibiajesterapi.validator.BossValidator;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,21 +25,24 @@ public class BossService {
     private final BossRepository bossRepository;
     private final BossMapper bossMapper;
     private final BossValidator bossValidator;
+
     private final ImageService imageService;
 
     @Transactional
-    public UUID save(BossRequestDTO bossDto, ImageRequestDTO imageDto) {
+    public UUID save(BossRequestDTO bossDto,
+                     ImageRequestDTO imageDto) {
 
         Boss boss = bossMapper.toEntity(bossDto);
         boss.setImage(imageService.saveEntity(imageDto));
 
         bossValidator.validate(boss);
-
         return bossRepository.save(boss).getId();
     }
 
     @Transactional
-    public void update(UUID bossId, @Valid BossRequestDTO bossDto, @Valid ImageRequestDTO imageDto) {
+    public void update(UUID bossId,
+                       BossRequestDTO bossDto,
+                       ImageRequestDTO imageDto) {
 
         Boss boss = getEntityById(bossId);
 
@@ -69,11 +70,12 @@ public class BossService {
         return bossRepository.findById(bossId)
                 .map(boss -> {
                     var url = ImageURLBuilderUtils.buildImageURL(boss.getImage());
-
                     return bossMapper.toDTO(boss);
                 })
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Não foi encontrado nenhum dado de boss.")
+                        new ResourceNotFoundException(
+                                "Boss não encontrado para o id: " + bossId
+                        )
                 );
 
 
@@ -81,9 +83,8 @@ public class BossService {
 
     public Set<BossResponseDTO> getAll() {
 
-        List<Boss> bosses = bossRepository.findAll();
-
-        return bosses.stream()
+        return bossRepository.findAll()
+                .stream()
                 .map(boss -> {
                     var url = ImageURLBuilderUtils.buildImageURL(boss.getImage());
                     return bossMapper.toDTO(boss);
@@ -91,10 +92,14 @@ public class BossService {
 
     }
 
-    public Boss getEntityById(UUID bossId) {
+    protected Boss getEntityById(UUID bossId) {
+
         return bossRepository.findById(bossId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Boss não encontrado: " + bossId
-                ));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Boss não encontrado para o id: " + bossId
+                        )
+                );
+
     }
 }

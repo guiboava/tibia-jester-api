@@ -11,6 +11,7 @@ import io.github.guiboava.tibiajesterapi.repository.UserCharacterRepository;
 import io.github.guiboava.tibiajesterapi.validator.UserCharacterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +28,10 @@ public class UserCharacterService {
     private final UserService userService;
     private final CharacterService characterService;
 
-    public UUID linkUserCharacter(UUID userId, UUID characterId, UserCharacterRequestDTO dto) {
+    @Transactional(readOnly = true)
+    public UUID linkUserCharacter(UUID userId,
+                                  UUID characterId,
+                                  UserCharacterRequestDTO dto) {
 
         User user = userService.getEntityById(userId);
         Character character = characterService.getEntityById(characterId);
@@ -41,7 +45,10 @@ public class UserCharacterService {
 
     }
 
-    public void updateMain(UUID userId, UUID characterId, UserCharacterRequestDTO dto) {
+    @Transactional
+    public void updateMain(UUID userId,
+                           UUID characterId,
+                           UserCharacterRequestDTO dto) {
 
         UserCharacter userCharacter = getEntityById(userId, characterId);
 
@@ -51,7 +58,9 @@ public class UserCharacterService {
 
     }
 
-    public void deleteLink(UUID userId, UUID characterId) {
+    @Transactional
+    public void deleteLink(UUID userId,
+                           UUID characterId) {
 
         UserCharacter userCharacter = getEntityById(userId, characterId);
 
@@ -59,32 +68,39 @@ public class UserCharacterService {
 
     }
 
-    public UserCharacterResponseDTO getById(UUID userId, UUID characterId) {
+    @Transactional(readOnly = true)
+    public UserCharacterResponseDTO getById(UUID userId,
+                                            UUID characterId) {
 
         return userCharacterMapper.toDTO(getEntityById(userId, characterId));
 
     }
 
+    @Transactional(readOnly = true)
     public Set<UserCharacterResponseDTO> getAll(UUID userId) {
 
-        User user = userService.getEntityById(userId);
-
         return userCharacterRepository
-                .findAllByUser(user)
+                .findAllByUser(userService.getEntityById(userId))
                 .map(userCharacter -> {
                     return userCharacter.stream().map(userCharacterMapper::toDTO).collect(Collectors.toSet());
                 })
-                .orElseThrow(() -> new EntityNotFoundException("Vínculo não encontrado"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Vínculo não encontrado"
+                        )
+                );
 
     }
 
-    protected UserCharacter getEntityById(UUID userId, UUID characterId) {
+    protected UserCharacter getEntityById(UUID userId,
+                                          UUID characterId) {
 
-        User user = userService.getEntityById(userId);
-        Character character = characterService.getEntityById(characterId);
-
-        return userCharacterRepository.findByUserAndCharacter(user, character)
-                .orElseThrow(() -> new EntityNotFoundException("Vínculo não encontrado"));
+        return userCharacterRepository.findByUserAndCharacter(userService.getEntityById(userId), characterService.getEntityById(characterId))
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Vínculo não encontrado"
+                        )
+                );
 
     }
 

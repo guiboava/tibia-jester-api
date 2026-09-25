@@ -10,6 +10,7 @@ import io.github.guiboava.tibiajesterapi.repository.HuntStatusRepository;
 import io.github.guiboava.tibiajesterapi.validator.HuntStatusValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class HuntStatusService {
 
     private final HuntService huntService;
 
-    public UUID save(UUID huntId, HuntStatusRequestDTO dto) {
+    public UUID save(UUID huntId,
+                     HuntStatusRequestDTO dto) {
 
         Hunt hunt = huntService.getEntityById(huntId);
         HuntStatus huntStatus = huntStatusMapper.toEntity(dto);
@@ -37,7 +39,9 @@ public class HuntStatusService {
 
     }
 
-    public void update(UUID huntId, UUID huntStatusId, HuntStatusRequestDTO dto) {
+    public void update(UUID huntId,
+                       UUID huntStatusId,
+                       HuntStatusRequestDTO dto) {
 
         huntService.getEntityById(huntId);
         HuntStatus huntStatus = getEntityById(huntStatusId);
@@ -49,7 +53,8 @@ public class HuntStatusService {
 
     }
 
-    public void delete(UUID huntId, UUID huntStatusId) {
+    public void delete(UUID huntId,
+                       UUID huntStatusId) {
 
         huntService.getEntityById(huntId);
         HuntStatus huntStatus = getEntityById(huntStatusId);
@@ -59,7 +64,9 @@ public class HuntStatusService {
 
     }
 
-    public HuntStatusResponseDTO getById(UUID huntId, UUID huntStatusId) {
+    @Transactional(readOnly = true)
+    public HuntStatusResponseDTO getById(UUID huntId,
+                                         UUID huntStatusId) {
 
         huntService.getEntityById(huntId);
         HuntStatus huntStatus = getEntityById(huntStatusId);
@@ -68,15 +75,22 @@ public class HuntStatusService {
         return huntStatusMapper.toDTO(huntStatus);
     }
 
+    @Transactional(readOnly = true)
     public Set<HuntStatusResponseDTO> getAll(UUID huntId) {
 
-        Hunt hunt = huntService.getEntityById(huntId);
-        return huntStatusRepository.findAllByHunt(hunt).stream().map(huntStatusMapper::toDTO).collect(Collectors.toSet());
+        return huntStatusRepository.findAllByHunt(huntService.getEntityById(huntId))
+                .stream()
+                .map(huntStatusMapper::toDTO)
+                .collect(Collectors.toSet());
 
     }
 
-    private HuntStatus getEntityById(UUID huntStatusId) {
-        return huntStatusRepository.findById(huntStatusId).orElseThrow(() -> new ResourceNotFoundException("Status de hunt não encontrada."));
+    protected HuntStatus getEntityById(UUID huntStatusId) {
+        return huntStatusRepository.findById(huntStatusId).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        "Status de hunt não encontrado para o id " + huntStatusId
+                )
+        );
     }
 
 }

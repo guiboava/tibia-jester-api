@@ -1,20 +1,18 @@
 package io.github.guiboava.tibiajesterapi.service;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.HuntRequestDTO;
-import io.github.guiboava.tibiajesterapi.controller.dto.response.HuntResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.ImageRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.response.HuntResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.mappers.HuntMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.Hunt;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.HuntRepository;
 import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import io.github.guiboava.tibiajesterapi.validator.HuntValidator;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,7 +28,8 @@ public class HuntService {
     private final ImageService imageService;
 
     @Transactional
-    public UUID save(HuntRequestDTO huntDto, ImageRequestDTO imageDto) {
+    public UUID save(HuntRequestDTO huntDto,
+                     ImageRequestDTO imageDto) {
 
         Hunt hunt = huntMapper.toEntity(huntDto);
         hunt.setImage(imageService.saveEntity(imageDto));
@@ -41,7 +40,9 @@ public class HuntService {
     }
 
     @Transactional
-    public void update(UUID huntId, @Valid HuntRequestDTO huntDto, @Valid ImageRequestDTO imageDto) {
+    public void update(UUID huntId,
+                       HuntRequestDTO huntDto,
+                       ImageRequestDTO imageDto) {
 
         Hunt hunt = getEntityById(huntId);
 
@@ -72,17 +73,19 @@ public class HuntService {
                     return huntMapper.toDTO(hunt, url);
                 })
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Não foi encontrado nenhum dado de hunt.")
+                        new ResourceNotFoundException(
+                                "Não foi encontrado nenhum dado de hunt para o id: " + huntId
+                        )
                 );
 
 
     }
 
+    @Transactional(readOnly = true)
     public Set<HuntResponseDTO> getAll() {
 
-        List<Hunt> hunts = huntRepository.findAll();
-
-        return hunts.stream()
+        return huntRepository.findAll()
+                .stream()
                 .map(hunt -> {
                     var url = ImageURLBuilderUtils.buildImageURL(hunt.getImage());
                     return huntMapper.toDTO(hunt, url);
@@ -90,11 +93,16 @@ public class HuntService {
 
     }
 
+    @Transactional(readOnly = true)
     protected Hunt getEntityById(UUID huntId) {
+
         return huntRepository.findById(huntId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Hunt não encontrada: " + huntId
-                ));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Não foi encontrado nenhum dado de hunt para o id: " + huntId
+                        )
+                );
+
     }
 
 }

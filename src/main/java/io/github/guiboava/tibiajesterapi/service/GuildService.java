@@ -31,7 +31,8 @@ public class GuildService {
 
     }
 
-    public void update(UUID guildId, GuildRequestDTO dto) {
+    public void update(UUID guildId,
+                       GuildRequestDTO dto) {
 
         Guild guild = getEntityById(guildId);
         guildMapper.updateEntityFromDto(dto, guild);
@@ -55,13 +56,21 @@ public class GuildService {
 
     public Set<GuildResponseDTO> getAll() {
 
-        return guildRepository.findAll().stream().map(guildMapper::toDTO).collect(Collectors.toSet());
+        return guildRepository.findAll()
+                .stream()
+                .map(guildMapper::toDTO)
+                .collect(Collectors.toSet());
 
     }
 
     protected Guild getEntityById(UUID guildId) {
 
-        return guildRepository.findById(guildId).orElseThrow(() -> new ResourceNotFoundException("Mundo não encontrado para o id " + guildId));
+        return guildRepository.findById(guildId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Guild não encontrado para o id " + guildId
+                        )
+                );
 
     }
 

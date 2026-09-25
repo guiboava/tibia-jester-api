@@ -39,7 +39,8 @@ public class CharacterService {
     }
 
     @Transactional
-    public void update(UUID characterId, CharacterRequestDTO dto) {
+    public void update(UUID characterId,
+                       CharacterRequestDTO dto) {
 
         Character character = getEntityById(characterId);
         characterMapper.updateEntityFromDto(dto, character);
@@ -52,26 +53,42 @@ public class CharacterService {
 
     @Transactional
     public void delete(UUID characterId) {
+
         Character character = getEntityById(characterId);
         characterRepository.delete(character);
+
     }
 
+    @Transactional(readOnly = true)
     public CharacterResponseDTO getById(UUID characterId) {
+
         return characterMapper.toDTO(getEntityById(characterId));
+
     }
 
+    @Transactional(readOnly = true)
     public Set<CharacterResponseDTO> getAll() {
-        return characterRepository.findAll().stream()
+
+        return characterRepository.findAll()
+                .stream()
                 .map(characterMapper::toDTO)
                 .collect(Collectors.toSet());
+
     }
 
     protected Character getEntityById(UUID characterId) {
+
         return characterRepository.findById(characterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Personagem não encontrado para o id " + characterId));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Personagem não encontrado para o id " + characterId
+                        )
+                );
+
     }
 
-    private Character applyRelations(Character character, CharacterRequestDTO dto) {
+    private Character applyRelations(Character character,
+                                     CharacterRequestDTO dto) {
 
         World world = worldService.getEntityById(dto.worldId());
         AccountInformation accountInformation = accountInformationService.getEntityById(dto.accountInformationId());
