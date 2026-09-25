@@ -1,6 +1,7 @@
 package io.github.guiboava.tibiajesterapi.service;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.BossAlarmRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.UserCharacterRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
@@ -11,6 +12,7 @@ import io.github.guiboava.tibiajesterapi.entity.model.User;
 import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.UserRepository;
 import io.github.guiboava.tibiajesterapi.validator.UserValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -106,8 +108,7 @@ public class UserService {
                 .collect(Collectors.toSet());
     }
 
-    private User getEntityById(UUID worldId) {
+    protected User getEntityById(UUID worldId) {
         return userRepository.findById(worldId).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado."));
     }
-
 }

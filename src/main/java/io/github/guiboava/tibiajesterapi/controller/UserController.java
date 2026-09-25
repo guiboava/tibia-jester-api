@@ -1,6 +1,7 @@
 package io.github.guiboava.tibiajesterapi.controller;
 
 import io.github.guiboava.tibiajesterapi.controller.dto.request.BossAlarmRequestDTO;
+import io.github.guiboava.tibiajesterapi.controller.dto.request.UserCharacterRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.request.UserRequestDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.BossResponseDTO;
 import io.github.guiboava.tibiajesterapi.controller.dto.response.UserResponseDTO;
@@ -80,7 +81,7 @@ public class UserController implements GenericController {
 
     @PutMapping("{userId}/userBossAlarm")
     @Operation(summary = "Adicionar Boss no alarme.", description = "Adicionar/modificar a lista de Boss Alarme")
-    public ResponseEntity<Void> createUser(@PathVariable("userId") UUID userId, @RequestBody @Valid BossAlarmRequestDTO dto) {
+    public ResponseEntity<Void> createBossAlarmList(@PathVariable("userId") UUID userId, @RequestBody @Valid BossAlarmRequestDTO dto) {
 
         service.addBossesToAlarm(userId, dto);
         return ResponseEntity.noContent().build();
@@ -89,7 +90,7 @@ public class UserController implements GenericController {
 
     @GetMapping("{userId}/userBossAlarm")
     @Operation(summary = "Adicionar Boss no alarme.", description = "Adicionar/modificar a lista de Boss Alarme")
-    public ResponseEntity<Set<BossResponseDTO>> createUser(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<Set<BossResponseDTO>> getAllBossAlarm(@PathVariable("userId") UUID userId) {
 
         return ResponseEntity.ok(service.getBossesAlarmFromUser(userId));
 

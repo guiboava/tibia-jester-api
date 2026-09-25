@@ -66,7 +66,7 @@ public class CharacterService {
                 .collect(Collectors.toSet());
     }
 
-    private Character getEntityById(UUID characterId) {
+    protected Character getEntityById(UUID characterId) {
         return characterRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Personagem não encontrado para o id " + characterId));
     }
