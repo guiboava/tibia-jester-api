@@ -14,6 +14,7 @@ import io.github.guiboava.tibiajesterapi.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
-    //private final PasswordEncoder encoder;    ATENÇÃO FUTURAMENTE DEVE SER FEITA A CAMADA DE SPRING SECURITY DO APP
+    private final PasswordEncoder encoder;
 
     private final BossService bossService;
 
@@ -38,15 +39,14 @@ public class UserService {
         User user = userMapper.toEntity(dto);
 
         userValidator.validate(user);
-        //user.setPassword(encoder.encode(user.getPassword()));     ATENÇÃO FUTURAMENTE DEVE SER FEITA A CAMADA DE SPRING SECURITY DO APP
+        user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user).getId();
 
     }
 
-    public void update(UUID userId,
+    public void update(User user,
                        UserRequestDTO dto) {
 
-        User user = getEntityById(userId);
         userMapper.updateEntityFromDto(dto, user);
 
         userValidator.validate(user);
@@ -77,6 +77,12 @@ public class UserService {
 
     }
 
+    public UserResponseDTO getAuthenticatedUser(User user) {
+
+        return userMapper.toDTO(user);
+
+    }
+
     public List<UserResponseDTO> searchByExample(String name,
                                                  String login,
                                                  String email,
@@ -103,15 +109,13 @@ public class UserService {
     }
 
     @Transactional
-    public void addBossesToAlarm(UUID userId,
+    public void addBossesToAlarm(User user,
                                  BossAlarmRequestDTO dto) {
 
         Set<Boss> bosses = dto.bossIds()
                 .stream()
                 .map(bossService::getEntityById)
                 .collect(Collectors.toSet());
-
-        User user = getEntityById(userId);
 
         user.setBosses(bosses);
 
@@ -122,12 +126,26 @@ public class UserService {
     @Transactional(readOnly = true)
     public Set<BossResponseDTO> getBossesAlarmFromUser(UUID userId) {
 
-        return getEntityById(userId)
+        User user = getEntityById(userId);
+
+        return user
                 .getBosses()
                 .stream()
                 .map(boss ->
                         bossService.getById(boss.getId()))
                 .collect(Collectors.toSet());
+    }
+
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User getByLoginByEmail(String login) {
+        return userRepository.getByEmail(login);
     }
 
     protected User getEntityById(UUID worldId) {
@@ -138,4 +156,5 @@ public class UserService {
                         )
                 );
     }
+
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class ImageController implements GenericController {
     private final ImageService service;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> createImage(
             @Valid @ModelAttribute ImageRequestDTO dto) {
 
@@ -38,6 +40,7 @@ public class ImageController implements GenericController {
     }
 
     @PutMapping(value = "/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar", description = "Atualizar um usuário dentro do sistema.")
     public ResponseEntity<Void> updateImage(@PathVariable UUID imageId, @Valid @ModelAttribute ImageRequestDTO dto) {
 
@@ -48,6 +51,7 @@ public class ImageController implements GenericController {
     }
 
     @DeleteMapping("/{imageId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Deletar.", description = "Deletar uma imagem dentro do sistema.")
     public ResponseEntity<Void> deleteImage(@PathVariable("imageId") UUID imageId) {
 
@@ -59,6 +63,7 @@ public class ImageController implements GenericController {
     }
 
     @GetMapping("/{imageId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma imagem dentro do sistema.")
     public ResponseEntity<byte[]> getImageById(@PathVariable("imageId") UUID imageId) {
 
@@ -68,6 +73,7 @@ public class ImageController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar todas imagens", description = "Mostra todas imagens salvas no sistema.")
     public ResponseEntity<Set<ImageResponseDTO>> getAllImages(){
 

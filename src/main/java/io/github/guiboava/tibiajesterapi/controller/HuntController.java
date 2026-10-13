@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,6 +29,7 @@ public class HuntController implements GenericController{
     private final HuntService service;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> createHunt(@Valid HuntRequestDTO huntDto, @Valid @ModelAttribute ImageRequestDTO imageDto) {
 
         log.info("Cadastrando uma nova Hunt: {}", huntDto.name());
@@ -46,6 +48,7 @@ public class HuntController implements GenericController{
     }
 
     @PutMapping(value = "/{huntId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar", description = "Atualizar uma hunt dentro do sistema.")
     public ResponseEntity<Void> updateHunt(@PathVariable UUID huntId, @Valid HuntRequestDTO huntDto, @Valid @ModelAttribute ImageRequestDTO imageDto) {
 
@@ -56,6 +59,7 @@ public class HuntController implements GenericController{
     }
 
     @DeleteMapping("/{huntId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Deletar.", description = "Deletar uma hunt dentro do sistema.")
     public ResponseEntity<Void> deleteHunt(@PathVariable("huntId") UUID huntId) {
 
@@ -67,6 +71,7 @@ public class HuntController implements GenericController{
     }
 
     @GetMapping("/{huntId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma hunt dentro do sistema.")
     public ResponseEntity<HuntResponseDTO> getHuntById(@PathVariable("huntId") UUID huntId) {
 
@@ -75,6 +80,7 @@ public class HuntController implements GenericController{
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar todas hunts.", description = "Mostra todas hunts salvas no sistema.")
     public ResponseEntity<Set<HuntResponseDTO>> getAllHunts() {
 

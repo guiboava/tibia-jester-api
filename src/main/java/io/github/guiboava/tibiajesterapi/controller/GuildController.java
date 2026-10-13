@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class GuildController implements GenericController {
     private final GuildService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar uma nova Guild dentro do sistema.")
     public ResponseEntity<Void> createGuild(@RequestBody @Valid GuildRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class GuildController implements GenericController {
     }
 
     @PutMapping("/{guildId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar uma Guild dentro do sistema.")
     public ResponseEntity<Void> updateGuild(@PathVariable("guildId") UUID guildId, @RequestBody @Valid GuildRequestDTO dto) {
 
@@ -48,6 +51,7 @@ public class GuildController implements GenericController {
     }
 
     @DeleteMapping("/{guildId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um personagem dentro do sistema.")
     public ResponseEntity<Void> deleteGuild(@PathVariable("guildId") UUID guildId) {
 
@@ -59,6 +63,7 @@ public class GuildController implements GenericController {
     }
 
     @GetMapping("/{guildId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma guilda dentro do sistema.")
     public ResponseEntity<GuildResponseDTO> getGuildById(@PathVariable("guildId") UUID guildId) {
 
@@ -67,6 +72,7 @@ public class GuildController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar personagems.", description = "Pesquisar por uma personagem dentro do sistema.")
     public ResponseEntity<Set<GuildResponseDTO>> getAllGuilds() {
 

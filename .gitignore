@@ -35,6 +35,7 @@ application-local.properties
 # ===========================
 *.log
 *.log.*
+*.gz
 logs/
 
 # ===========================
@@ -71,6 +72,11 @@ desktop.ini
 # Docker
 # ===========================
 docker-compose.override.yml
+
+# ===========================
+# Documentation
+# ===========================
+HELP.md
 
 # ===========================
 # Env / Secrets

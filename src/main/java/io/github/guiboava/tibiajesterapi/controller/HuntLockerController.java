@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class HuntLockerController implements GenericController {
     private final HuntLockerService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Salvar.", description = "Criar uma nova HuntLocker dentro do sistema.")
     public ResponseEntity<Void> createHuntLocker(@RequestBody @Valid HuntLockerRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class HuntLockerController implements GenericController {
     }
 
     @PutMapping("/{huntLockerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Atualizar.", description = "Atualizar uma HuntLocker dentro do sistema.")
     public ResponseEntity<Void> updateHuntLocker(@PathVariable("huntLockerId") UUID huntLockerId, @RequestBody @Valid HuntLockerRequestDTO dto) {
 
@@ -48,6 +51,7 @@ public class HuntLockerController implements GenericController {
     }
 
     @DeleteMapping("/{huntLockerId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um personagem dentro do sistema.")
     public ResponseEntity<Void> deleteHuntLocker(@PathVariable("huntLockerId") UUID huntLockerId) {
 
@@ -59,6 +63,7 @@ public class HuntLockerController implements GenericController {
     }
 
     @GetMapping("/{huntLockerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma huntLockera dentro do sistema.")
     public ResponseEntity<HuntLockerResponseDTO> getHuntLockerById(@PathVariable("huntLockerId") UUID huntLockerId) {
 
@@ -67,6 +72,7 @@ public class HuntLockerController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar personagems.", description = "Pesquisar por uma personagem dentro do sistema.")
     public ResponseEntity<Set<HuntLockerResponseDTO>> getAllHuntLockers() {
 

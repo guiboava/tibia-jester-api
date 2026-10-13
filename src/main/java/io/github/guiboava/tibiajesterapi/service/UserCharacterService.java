@@ -6,7 +6,7 @@ import io.github.guiboava.tibiajesterapi.controller.mappers.UserCharacterMapper;
 import io.github.guiboava.tibiajesterapi.entity.model.Character;
 import io.github.guiboava.tibiajesterapi.entity.model.User;
 import io.github.guiboava.tibiajesterapi.entity.model.UserCharacter;
-import io.github.guiboava.tibiajesterapi.exception.EntityNotFoundException;
+import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.UserCharacterRepository;
 import io.github.guiboava.tibiajesterapi.validator.UserCharacterValidator;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,13 @@ public class UserCharacterService {
     private final UserService userService;
     private final CharacterService characterService;
 
-    @Transactional(readOnly = true)
-    public UUID linkUserCharacter(UUID userId,
+    @Transactional
+    public UUID linkUserCharacter(User user,
                                   UUID characterId,
                                   UserCharacterRequestDTO dto) {
 
-        User user = userService.getEntityById(userId);
+
+
         Character character = characterService.getEntityById(characterId);
 
         UserCharacter userCharacter = userCharacterMapper.toEntity(dto);
@@ -41,16 +42,18 @@ public class UserCharacterService {
         userCharacter.setUser(user);
         userCharacterValidator.validate(userCharacter);
 
+
+
         return userCharacterRepository.save(userCharacter).getId();
 
     }
 
     @Transactional
-    public void updateMain(UUID userId,
+    public void updateMain(User user,
                            UUID characterId,
                            UserCharacterRequestDTO dto) {
 
-        UserCharacter userCharacter = getEntityById(userId, characterId);
+        UserCharacter userCharacter = getEntityById(user, characterId);
 
         userCharacterMapper.updateEntityFromDto(dto, userCharacter);
         userCharacterValidator.validate(userCharacter);
@@ -59,45 +62,45 @@ public class UserCharacterService {
     }
 
     @Transactional
-    public void deleteLink(UUID userId,
+    public void deleteLink(User user,
                            UUID characterId) {
 
-        UserCharacter userCharacter = getEntityById(userId, characterId);
+        UserCharacter userCharacter = getEntityById(user, characterId);
 
         userCharacterRepository.delete(userCharacter);
 
     }
 
     @Transactional(readOnly = true)
-    public UserCharacterResponseDTO getById(UUID userId,
+    public UserCharacterResponseDTO getById(User user,
                                             UUID characterId) {
 
-        return userCharacterMapper.toDTO(getEntityById(userId, characterId));
+        return userCharacterMapper.toDTO(getEntityById(user, characterId));
 
     }
 
     @Transactional(readOnly = true)
-    public Set<UserCharacterResponseDTO> getAll(UUID userId) {
+    public Set<UserCharacterResponseDTO> getAll(User user) {
 
         return userCharacterRepository
-                .findAllByUser(userService.getEntityById(userId))
+                .findAllByUser(user)
                 .map(userCharacter -> {
                     return userCharacter.stream().map(userCharacterMapper::toDTO).collect(Collectors.toSet());
                 })
                 .orElseThrow(() ->
-                        new EntityNotFoundException(
+                        new ResourceNotFoundException(
                                 "Vínculo não encontrado"
                         )
                 );
 
     }
 
-    protected UserCharacter getEntityById(UUID userId,
+    protected UserCharacter getEntityById(User user,
                                           UUID characterId) {
 
-        return userCharacterRepository.findByUserAndCharacter(userService.getEntityById(userId), characterService.getEntityById(characterId))
+        return userCharacterRepository.findByUserAndCharacter(user, characterService.getEntityById(characterId))
                 .orElseThrow(() ->
-                        new EntityNotFoundException(
+                        new ResourceNotFoundException(
                                 "Vínculo não encontrado"
                         )
                 );

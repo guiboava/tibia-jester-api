@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class CharacterController implements GenericController {
     private final CharacterService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar um novo character dentro do sistema.")
     public ResponseEntity<Void> createCharacter(@RequestBody @Valid CharacterRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class CharacterController implements GenericController {
     }
 
     @PutMapping("/{characterId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um personagem dentro do sistema.")
     public ResponseEntity<Void> updateCharacter(@PathVariable("characterId") UUID characterId, @RequestBody @Valid CharacterRequestDTO dto) {
 
@@ -47,6 +50,7 @@ public class CharacterController implements GenericController {
     }
 
     @DeleteMapping("/{characterId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um personagem dentro do sistema.")
     public ResponseEntity<Void> deleteCharacter(@PathVariable("characterId") UUID characterId) {
 
@@ -58,6 +62,7 @@ public class CharacterController implements GenericController {
     }
 
     @GetMapping("/{characterId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma personagem dentro do sistema.")
     public ResponseEntity<CharacterResponseDTO> getCharacterById(@PathVariable("characterId") UUID characterId) {
 
@@ -66,6 +71,7 @@ public class CharacterController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar personagems.", description = "Pesquisar por uma personagem dentro do sistema.")
     public ResponseEntity<Set<CharacterResponseDTO>> getAllCharacters() {
 

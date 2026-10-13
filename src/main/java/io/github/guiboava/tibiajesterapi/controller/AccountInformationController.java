@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class AccountInformationController implements GenericController {
     private final AccountInformationService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar uma nova AccountInformation dentro do sistema.")
     public ResponseEntity<Void> createAccountInformation(@RequestBody @Valid AccountInformationRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class AccountInformationController implements GenericController {
     }
 
     @PutMapping("/{accountInformationId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar uma AccountInformation dentro do sistema.")
     public ResponseEntity<Void> updateAccountInformation(@PathVariable("accountInformationId") UUID accountInformationId,
                                                          @RequestBody @Valid AccountInformationRequestDTO dto) {
@@ -49,6 +52,7 @@ public class AccountInformationController implements GenericController {
     }
 
     @DeleteMapping("/{accountInformationId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um personagem dentro do sistema.")
     public ResponseEntity<Void> deleteAccountInformation(@PathVariable("accountInformationId") UUID accountInformationId) {
 
@@ -60,6 +64,7 @@ public class AccountInformationController implements GenericController {
     }
 
     @GetMapping("/{accountInformationId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma accountInformationa dentro do sistema.")
     public ResponseEntity<AccountInformationResponseDTO> getAccountInformationById(@PathVariable("accountInformationId") UUID accountInformationId) {
 
@@ -68,6 +73,7 @@ public class AccountInformationController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar personagems.", description = "Pesquisar por uma personagem dentro do sistema.")
     public ResponseEntity<Set<AccountInformationResponseDTO>> getAllAccountInformations() {
 

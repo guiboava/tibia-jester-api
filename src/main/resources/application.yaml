@@ -17,6 +17,14 @@ spring:
       ddl-auto: update
     properties:
       hibernate.format_sql: true
+    open-in-view: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
   server:
     address: 0.0.0.0
     port: 8080
@@ -35,11 +43,19 @@ logging:
     org.springframework.security.web.access: INFO
     org.springframework.security.web.authentication: INFO
     org.springframework.security.web.savedrequest: INFO
-    io.github.guiboava.bem_dosado: DEBUG
+    io.github.guiboava.tibia-jester-api: DEBUG
 management:
   server:
     port: 9090
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: health,info
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: Tibia Jester API
+    description: API para ferramentas e recursos de Tibia
+    version: 1.0.0

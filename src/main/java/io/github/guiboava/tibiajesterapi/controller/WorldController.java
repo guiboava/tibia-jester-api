@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class WorldController implements GenericController {
     private final WorldService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar um novo world dentro do sistema.")
     public ResponseEntity<Void> createWorld(@RequestBody @Valid WorldRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class WorldController implements GenericController {
     }
 
     @PutMapping("/{worldId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um mundo dentro do sistema.")
     public ResponseEntity<Void> updateWorld(@PathVariable("worldId") UUID worldId, @RequestBody @Valid WorldRequestDTO dto) {
 
@@ -47,6 +50,7 @@ public class WorldController implements GenericController {
     }
 
     @DeleteMapping("/{worldId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um mundo dentro do sistema.")
     public ResponseEntity<Void> deleteWorld(@PathVariable("worldId") UUID worldId) {
 
@@ -58,6 +62,7 @@ public class WorldController implements GenericController {
     }
 
     @GetMapping("/{worldId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma mundo dentro do sistema.")
     public ResponseEntity<WorldResponseDTO> getWorldById(@PathVariable("worldId") UUID worldId) {
 
@@ -66,6 +71,7 @@ public class WorldController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar mundos.", description = "Pesquisar por uma mundo dentro do sistema.")
     public ResponseEntity<Set<WorldResponseDTO>> getAllWorlds() {
 

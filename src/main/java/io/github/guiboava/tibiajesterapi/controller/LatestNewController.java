@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class LatestNewController implements GenericController {
     private final LatestNewService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar um novo latestNew dentro do sistema.")
     public ResponseEntity<Void> createLatestNew(@RequestBody @Valid LatestNewRequestDTO dto) {
 
@@ -37,6 +39,7 @@ public class LatestNewController implements GenericController {
     }
 
     @PutMapping("/{latestNewId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um Novidade dentro do sistema.")
     public ResponseEntity<Void> updateLatestNew(@PathVariable("latestNewId") UUID latestNewId, @RequestBody @Valid LatestNewRequestDTO dto) {
 
@@ -47,6 +50,7 @@ public class LatestNewController implements GenericController {
     }
 
     @DeleteMapping("/{latestNewId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um Novidade dentro do sistema.")
     public ResponseEntity<Void> deleteLatestNew(@PathVariable("latestNewId") UUID latestNewId) {
 
@@ -58,6 +62,7 @@ public class LatestNewController implements GenericController {
     }
 
     @GetMapping("/{latestNewId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma Novidade dentro do sistema.")
     public ResponseEntity<LatestNewResponseDTO> getLatestNewById(@PathVariable("latestNewId") UUID latestNewId) {
 
@@ -66,6 +71,7 @@ public class LatestNewController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar Novidades.", description = "Pesquisar por uma Novidade dentro do sistema.")
     public ResponseEntity<Set<LatestNewResponseDTO>> getAllLatestNews() {
 

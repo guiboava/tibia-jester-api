@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ public class AchievementController implements GenericController {
     private final AchievementService serivce;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Salvar.", description = "Criar um novo Achievement dentro do sistema.")
     public ResponseEntity<Void> createAchievement(@RequestBody @Valid AchievementRequestDTO dto) {
 
@@ -36,6 +38,7 @@ public class AchievementController implements GenericController {
     }
 
     @PutMapping("/{achievementId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar uma Achievement dentro do sistema.")
     public ResponseEntity<Void> updateAchievement(@PathVariable("achievementId") UUID achievementId, @RequestBody @Valid AchievementRequestDTO dto) {
 
@@ -47,6 +50,7 @@ public class AchievementController implements GenericController {
     }
 
     @DeleteMapping("/{achievementId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar.", description = "Atualizar um Achievement dentro do sistema.")
     public ResponseEntity<Void> deleteAchievement(@PathVariable("achievementId") UUID achievementId) {
 
@@ -58,6 +62,7 @@ public class AchievementController implements GenericController {
     }
 
     @GetMapping("/{achievementId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma Achievement dentro do sistema.")
     public ResponseEntity<AchievementResponseDTO> getAchievementById(@PathVariable("achievementId") UUID achievementId) {
 
@@ -66,6 +71,7 @@ public class AchievementController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar Achievement.", description = "Pesquisar por um Achievement dentro do sistema.")
     public ResponseEntity<Set<AchievementResponseDTO>> getAllAchievements() {
 

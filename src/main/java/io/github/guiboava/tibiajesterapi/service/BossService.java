@@ -9,7 +9,6 @@ import io.github.guiboava.tibiajesterapi.exception.ResourceNotFoundException;
 import io.github.guiboava.tibiajesterapi.repository.BossRepository;
 import io.github.guiboava.tibiajesterapi.util.ImageURLBuilderUtils;
 import io.github.guiboava.tibiajesterapi.validator.BossValidator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +95,7 @@ public class BossService {
 
         return bossRepository.findById(bossId)
                 .orElseThrow(() ->
-                        new EntityNotFoundException(
+                        new ResourceNotFoundException(
                                 "Boss não encontrado para o id: " + bossId
                         )
                 );

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,6 +27,7 @@ public class HuntStatusController implements GenericController {
     private final HuntStatusService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Salvar.", description = "Criar um novo huntStatus dentro do sistema.")
     public ResponseEntity<Void> createHuntStatus(@PathVariable("huntId") UUID huntId,
                                                  @RequestBody @Valid HuntStatusRequestDTO dto) {
@@ -38,6 +40,7 @@ public class HuntStatusController implements GenericController {
     }
 
     @PutMapping("/{huntStatusId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Atualizar.", description = "Atualizar um HuntStatus dentro do sistema.")
     public ResponseEntity<Void> updateHuntStatus(@PathVariable("huntId") UUID huntId,
                                                  @PathVariable("huntStatusId") UUID huntStatusId,
@@ -50,6 +53,7 @@ public class HuntStatusController implements GenericController {
     }
 
     @DeleteMapping("/{huntStatusId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Deletar.", description = "Atualizar um HuntStatus dentro do sistema.")
     public ResponseEntity<Void> deleteHuntStatus(@PathVariable("huntId") UUID huntId,
                                                  @PathVariable("huntStatusId") UUID huntStatusId) {
@@ -62,6 +66,7 @@ public class HuntStatusController implements GenericController {
     }
 
     @GetMapping("/{huntStatusId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma HuntStatus dentro do sistema.")
     public ResponseEntity<HuntStatusResponseDTO> getHuntStatusById(@PathVariable("huntId") UUID huntId,
                                                                    @PathVariable("huntStatusId") UUID huntStatusId) {
@@ -71,6 +76,7 @@ public class HuntStatusController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar HuntStatus.", description = "Pesquisar por uma HuntStatus dentro do sistema.")
     public ResponseEntity<Set<HuntStatusResponseDTO>> getAllHuntStatus(@PathVariable("huntId") UUID huntId) {
 

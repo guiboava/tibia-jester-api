@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,6 +29,7 @@ public class BossController implements GenericController {
     private final BossService service;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> createBoss(@Valid BossRequestDTO bossDto, @Valid @ModelAttribute ImageRequestDTO imageDto) {
 
         log.info("Cadastrando uma nova Boss: {}", bossDto.name());
@@ -46,6 +48,7 @@ public class BossController implements GenericController {
     }
 
     @PutMapping(value = "/{bossId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar", description = "Atualizar uma boss dentro do sistema.")
     public ResponseEntity<Void> updateBoss(@PathVariable UUID bossId, @Valid BossRequestDTO bossDto, @Valid @ModelAttribute ImageRequestDTO imageDto) {
 
@@ -56,6 +59,7 @@ public class BossController implements GenericController {
     }
 
     @DeleteMapping("/{bossId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Deletar.", description = "Deletar uma boss dentro do sistema.")
     public ResponseEntity<Void> deleteBoss(@PathVariable("bossId") UUID bossId) {
 
@@ -67,6 +71,7 @@ public class BossController implements GenericController {
     }
 
     @GetMapping("/{bossId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Encontrar.", description = "Pesquisar por uma boss dentro do sistema.")
     public ResponseEntity<BossResponseDTO> getBossById(@PathVariable("bossId") UUID bossId) {
 
@@ -75,6 +80,7 @@ public class BossController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','VIP')")
     @Operation(summary = "Listar todas bosses.", description = "Mostra todas os bosses salvas no sistema.")
     public ResponseEntity<Set<BossResponseDTO>> getAllBosses() {
 
